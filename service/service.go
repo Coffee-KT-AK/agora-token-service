@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -77,7 +78,6 @@ func NewService() *Service {
 			serverPort = "8080"
 		}
 	}
-	corsAllowOrigin, _ := os.LookupEnv("CORS_ALLOW_ORIGIN")
 
 	s := &Service{
 		Sigint: make(chan os.Signal, 1),
@@ -86,12 +86,13 @@ func NewService() *Service {
 		},
 		appID:          appIDEnv,
 		appCertificate: appCertEnv,
-		allowOrigin:    corsAllowOrigin,
+		allowOrigin:    "*",
 	}
 
 	api := gin.Default()
 
 	api.Use(s.nocache())
+	api.Use(cors.Default())
 	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", s.getRtcToken)
 	api.GET("rtm/:rtmuid/", s.getRtmToken)
 	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", s.getRtcRtmToken)

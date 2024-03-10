@@ -154,7 +154,7 @@ func (s *Service) nocache() gin.HandlerFunc {
 		c.Header("Expires", "-1")
 		c.Header("Pragma", "no-cache")
 		if s.allowOrigin != "" {
-			c.Header("Access-Control-Allow-Origin", s.allowOrigin)
+			c.Header("Access-Control-Allow-Origin", "*")
 		}
 	}
 }
